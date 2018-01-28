@@ -20,9 +20,12 @@ public:
 	static void DrawTile6( const Vei2& pos,Graphics& gfx );
 	static void DrawTile7( const Vei2& pos,Graphics& gfx );
 	static void DrawTile8( const Vei2& pos,Graphics& gfx );
+	static void DrawTileNumber(const Vei2& pos, int n, Graphics& gfx);
 	static void DrawTileButton( const Vei2& pos,Graphics& gfx );
 	static void DrawTileCross( const Vei2& pos,Graphics& gfx );
 	static void DrawTileFlag( const Vei2& pos,Graphics& gfx );
-	static void DrawTileBomb( const Vei2& pos,Graphics& gfx );
-	static void DrawTileBombRed( const Vei2& pos,Graphics& gfx );
+	static void DrawTileMeme( const Vei2& pos,Graphics& gfx );
+	static void DrawTileMemeRed( const Vei2& pos,Graphics& gfx );
+	// Win Screen 254x192 center origin
+	static void DrawWin(const Vei2& pos, Graphics& gfx);
 };

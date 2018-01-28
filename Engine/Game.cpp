@@ -24,7 +24,10 @@
 Game::Game( MainWindow& wnd )
 	:
 	wnd( wnd ),
-	gfx( wnd )
+	gfx( wnd ),
+	gameOverSound(L"Sounds/spayed.wav"),
+	field( 20 ),
+	gameOver(false)
 {
 }
 
@@ -38,8 +41,34 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	if (!gameOver) {
+		while (!wnd.mouse.IsEmpty())
+		{
+			const Mouse::Event e = wnd.mouse.Read();
+			if (e.GetType() == Mouse::Event::Type::LPress)
+			{
+				Vei2 mousePos = e.GetPos();
+				if (field.GetRect().Contains(mousePos)) {
+					field.OnRevealClick(mousePos);
+				}
+			}
+			if (e.GetType() == Mouse::Event::Type::RPress)
+			{
+				Vei2 mousePos = e.GetPos();
+				if (field.GetRect().Contains(mousePos)) {
+					field.OnFlagClick(mousePos);
+				}
+			}
+		}
+		if (field.IsFucked())
+		{
+			gameOverSound.Play();
+			gameOver = true;
+		}
+	}
 }
 
 void Game::ComposeFrame()
 {
+	field.Draw(gfx);
 }
