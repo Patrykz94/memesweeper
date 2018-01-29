@@ -21,6 +21,7 @@ private:
 	public:
 		void SpawnMeme();
 		bool HasMeme() const;
+		int MemeType() const;
 		void SetNeighbourMemeCount(int nMemes);
 		void Draw(const Vei2 screenPos, bool isFucked, Graphics& gfx) const;
 		void Reveal();
@@ -30,6 +31,7 @@ private:
 	private:
 		State state = State::Hidden;
 		bool hasMeme = false;
+		int memeType = -1;
 		int nNeighbourMemes = -1;
 	};
 public:
@@ -47,8 +49,8 @@ private:
 	Vei2& ScreenToGrid(const Vei2& screenPos);
 	int CountNeighbourMemes(const Vei2& gridPos);
 private:
-	static constexpr int width = 20;
-	static constexpr int height = 16;
+	static constexpr int width = 32;
+	static constexpr int height = 24;
 	Vei2 fieldPosition = { Graphics::ScreenWidth / 2 - width * SpriteCodex::tileSize / 2, Graphics::ScreenHeight / 2 - height*SpriteCodex::tileSize / 2 };
 	static constexpr Color fieldColor = Colors::MakeRGB(192, 192, 192);
 	bool isFucked = false;

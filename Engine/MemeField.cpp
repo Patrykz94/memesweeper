@@ -39,17 +39,21 @@ RectI MemeField::GetRect() const
 
 void MemeField::Draw(Graphics & gfx) const
 {
-	gfx.DrawRect(GetRect(), fieldColor);
-	for (Vei2 gridPos = { 0,0 }; gridPos.y < height; gridPos.y++)
-	{
-		for (gridPos.x = 0; gridPos.x < width; gridPos.x++)
-		{
-			TileAt(gridPos).Draw(gridPos * SpriteCodex::tileSize + fieldPosition, isFucked, gfx);
-		}
-	}
 	if (IsWinrar())
 	{
+		
 		SpriteCodex::DrawWin({ Graphics::ScreenWidth / 2, Graphics::ScreenHeight / 2 }, gfx);
+	}
+	else
+	{
+		gfx.DrawRect(GetRect(), fieldColor);
+		for (Vei2 gridPos = { 0,0 }; gridPos.y < height; gridPos.y++)
+		{
+			for (gridPos.x = 0; gridPos.x < width; gridPos.x++)
+			{
+				TileAt(gridPos).Draw(gridPos * SpriteCodex::tileSize + fieldPosition, isFucked, gfx);
+			}
+		}
 	}
 }
 
@@ -150,12 +154,22 @@ int MemeField::CountNeighbourMemes(const Vei2 & gridPos)
 void MemeField::Tile::SpawnMeme()
 {
 	assert(!hasMeme);
+	std::random_device rd;
+	std::mt19937 rng(rd());
+	std::uniform_int_distribution<int> meme(1, 3);
+
 	hasMeme = true;
+	memeType = meme(rng);
 }
 
 bool MemeField::Tile::HasMeme() const
 {
 	return hasMeme;
+}
+
+int MemeField::Tile::MemeType() const
+{
+	return memeType;
 }
 
 void MemeField::Tile::SetNeighbourMemeCount(int nMemes)
@@ -183,7 +197,7 @@ void MemeField::Tile::Draw(const Vei2 screenPos, bool isFucked, Graphics & gfx) 
 			}
 			else
 			{
-				SpriteCodex::DrawTileMeme(screenPos, gfx);
+				SpriteCodex::DrawTilePepper(screenPos, MemeType(), gfx);
 			}
 			break;
 		}
@@ -195,7 +209,7 @@ void MemeField::Tile::Draw(const Vei2 screenPos, bool isFucked, Graphics & gfx) 
 		case State::Hidden:
 			if (HasMeme())
 			{
-				SpriteCodex::DrawTileMeme(screenPos, gfx);
+				SpriteCodex::DrawTilePepper(screenPos, MemeType(), gfx);
 			}
 			else
 			{
@@ -205,19 +219,20 @@ void MemeField::Tile::Draw(const Vei2 screenPos, bool isFucked, Graphics & gfx) 
 		case State::Flagged:
 			if (HasMeme())
 			{
-				SpriteCodex::DrawTileMeme(screenPos, gfx);
+				SpriteCodex::DrawTilePepper(screenPos, MemeType(), gfx);
 				SpriteCodex::DrawTileFlag(screenPos, gfx);
 			}
 			else
 			{
-				SpriteCodex::DrawTileMeme(screenPos, gfx);
+				SpriteCodex::DrawTilePepper(screenPos, MemeType(), gfx);
 				SpriteCodex::DrawTileCross(screenPos, gfx);
 			}
 			break;
 		case State::Revealed:
 			if (HasMeme())
 			{
-				SpriteCodex::DrawTileMemeRed(screenPos, gfx);
+				SpriteCodex::DrawTileRed(screenPos, gfx);
+				SpriteCodex::DrawTilePepper(screenPos, MemeType(), gfx);
 			}
 			else
 			{
