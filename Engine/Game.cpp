@@ -26,7 +26,7 @@ Game::Game( MainWindow& wnd )
 	wnd( wnd ),
 	gfx( wnd ),
 	gameOverSound(L"Sounds/spayed.wav"),
-	field( 75 ),
+	field( 50 ),
 	gameOver(false)
 {
 }

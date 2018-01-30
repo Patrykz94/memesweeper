@@ -4230,11 +4230,10 @@ void SpriteCodex::DrawTileRed( const Vei2& pos,Graphics& gfx )
 	gfx.PutPixel(24 + pos.x, 24 + pos.y, 241, 73, 82);
 }
 
-void SpriteCodex::DrawWin(const Vei2& pos, Graphics& gfx)
+void SpriteCodex::DrawWin(const Vei2& posIn, Graphics& gfx)
 {
 	// calculate top left corner based on input (center)
-	const int x = pos.x - 800 / 2;
-	const int y = pos.y - 600 / 2;
+	const Vei2 pos = posIn - Vei2(800/2,600/2);
 	gfx.PutPixel(163 + pos.x, 106 + pos.y, 222, 74, 0);
 	gfx.PutPixel(164 + pos.x, 106 + pos.y, 222, 74, 0);
 	gfx.PutPixel(165 + pos.x, 106 + pos.y, 222, 74, 0);

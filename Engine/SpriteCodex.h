@@ -30,5 +30,5 @@ public:
 	static void DrawTilePepperYellow(const Vei2& pos, Graphics& gfx);
 	static void DrawTileRed( const Vei2& pos,Graphics& gfx );
 	// Win Screen 800x600 center origin
-	static void DrawWin(const Vei2& pos, Graphics& gfx);
+	static void DrawWin(const Vei2& posIn, Graphics& gfx);
 };
