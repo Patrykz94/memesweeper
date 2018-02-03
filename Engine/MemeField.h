@@ -28,6 +28,7 @@ private:
 		void ToggleFlag();
 		bool IsRevealed() const;
 		bool IsFlagged() const;
+		bool HasNeighbourMemes() const;
 	private:
 		State state = State::Hidden;
 		bool hasMeme = false;
@@ -44,6 +45,7 @@ public:
 	bool IsFucked() const;
 	bool IsWinrar() const;
 private:
+	void RevealTiles(const Vei2& gridPos);
 	Tile& TileAt(const Vei2& gridPos);
 	const Tile& TileAt(const Vei2& gridPos) const;
 	Vei2& ScreenToGrid(const Vei2& screenPos);
