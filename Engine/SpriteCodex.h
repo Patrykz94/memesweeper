@@ -31,4 +31,10 @@ public:
 	static void DrawTileRed( const Vei2& pos,Graphics& gfx );
 	// Win Screen 800x600 center origin
 	static void DrawWin(const Vei2& posIn, Graphics& gfx);
+	// Text for size selection (center origin)
+	static constexpr int sizeselWidth = 240;
+	static constexpr int sizeselHeight = 56;
+	static void DrawSmall(const Vei2& pos, Graphics& gfx);
+	static void DrawMedium(const Vei2& pos, Graphics& gfx);
+	static void DrawLarge(const Vei2& pos, Graphics& gfx);
 };

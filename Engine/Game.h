@@ -24,10 +24,16 @@
 #include "Mouse.h"
 #include "Graphics.h"
 #include "MemeField.h"
-#include "Sound.h"
+#include "SelectionMenu.h"
 
 class Game
 {
+private:
+	enum class State
+	{
+		SelectionMenu,
+		Memesweeper
+	};
 public:
 	Game( class MainWindow& wnd );
 	Game( const Game& ) = delete;
@@ -44,8 +50,8 @@ private:
 	Graphics gfx;
 	/********************************/
 	/*  User Variables              */
-	/********************************/
 	MemeField field;
-	Sound gameOverSound;
-	bool gameOver;
+	SelectionMenu menu;
+	State state = State::SelectionMenu;
+	/********************************/
 };

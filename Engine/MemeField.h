@@ -8,6 +8,13 @@
 
 class MemeField
 {
+public:
+	enum class State : char
+	{
+		Fucked,
+		Winrar,
+		Memeing
+	};
 private:
 	class Tile
 	{
@@ -23,7 +30,7 @@ private:
 		bool HasMeme() const;
 		int MemeType() const;
 		void SetNeighbourMemeCount(int nMemes);
-		void Draw(const Vei2 screenPos, bool isFucked, Graphics& gfx) const;
+		void Draw(const Vei2 screenPos, MemeField::State state, Graphics& gfx) const;
 		void Reveal();
 		void ToggleFlag();
 		bool IsRevealed() const;
@@ -36,26 +43,26 @@ private:
 		int nNeighbourMemes = -1;
 	};
 public:
-	MemeField(int nMemes);
+	MemeField(const Vei2& center);
 	RectI GetRect() const;
 	void Draw(Graphics& gfx) const;
 	void OnRevealClick(const Vei2& screenPos);
 	void OnFlagClick(const Vei2& screenPos);
-	Sound gameOverSound = L"Sounds/spayed.wav";
-	bool IsFucked() const;
-	bool IsWinrar() const;
+	State GetState() const;
 private:
-	void RevealTiles(const Vei2& gridPos);
+	void RevealTile(const Vei2& gridPos);
 	Tile& TileAt(const Vei2& gridPos);
 	const Tile& TileAt(const Vei2& gridPos) const;
 	Vei2& ScreenToGrid(const Vei2& screenPos);
 	int CountNeighbourMemes(const Vei2& gridPos);
+	bool GameIsWon() const;
 private:
 	static constexpr int width = 32;
 	static constexpr int height = 24;
-	Vei2 fieldPosition = { Graphics::ScreenWidth / 2 - width * SpriteCodex::tileSize / 2, Graphics::ScreenHeight / 2 - height*SpriteCodex::tileSize / 2 };
 	static constexpr Color fieldColor = Colors::MakeRGB(192, 192, 192);
-	bool isFucked = false;
+	const int memesCount = (width*height)/100;
+	Sound gameOverSound = Sound(L"Sounds/spayed.wav");
+	Vei2 topLeft;
+	State state = State::Memeing;
 	Tile field[width * height];
-	int memesCount;
 };
