@@ -3,11 +3,13 @@
 #include <assert.h>
 #include <random>
 
-MemeField::MemeField(const Vei2& center)
+MemeField::MemeField(const Vei2& center, int width, int height)
 	:
-	topLeft(center - Vei2(width * SpriteCodex::tileSize, height * SpriteCodex::tileSize) / 2)
+	topLeft(center - Vei2(width * SpriteCodex::tileSize, height * SpriteCodex::tileSize) / 2),
+	width(width),
+	height(height),
+	field(new Tile[width * height])
 {
-	assert(nMemes > 0 && nMemes < width * height);
 	std::random_device rd;
 	std::mt19937 rng(rd());
 	std::uniform_int_distribution<int> xDist(0, width - 1);
@@ -86,6 +88,12 @@ MemeField::State MemeField::GetState() const
 	return state;
 }
 
+void MemeField::DestroyField()
+{
+	delete[] field;
+	field = nullptr;
+}
+
 void MemeField::RevealTile(const Vei2& gridPos)
 {
 	Tile& tile = TileAt(gridPos);
@@ -156,8 +164,9 @@ int MemeField::CountNeighbourMemes(const Vei2 & gridPos)
 
 bool MemeField::GameIsWon() const
 {
-	for (const Tile& t : field)
+	for (int i = 0; i < width*height; i++)
 	{
+		const Tile& t = field[i];
 		if ((t.HasMeme() && !t.IsFlagged()) ||
 			(!t.HasMeme() && !t.IsRevealed()))
 		{

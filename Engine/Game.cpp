@@ -20,19 +20,19 @@
  ******************************************************************************************/
 #include "MainWindow.h"
 #include "Game.h"
+#include <assert.h>
 
 Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
-	menu({ gfx.GetRect().GetCenter().x,200 }),
-	field(gfx.GetRect().GetCenter())
+	menu({ gfx.GetRect().GetCenter().x,200 })
 {
 }
 
 void Game::Go()
 {
-	gfx.BeginFrame();	
+	gfx.BeginFrame();
 	UpdateModel();
 	ComposeFrame();
 	gfx.EndFrame();
@@ -45,22 +45,34 @@ void Game::UpdateModel()
 		const auto e = wnd.mouse.Read();
 		if (state == State::Memesweeper)
 		{
-			if (field.GetState() == MemeField::State::Memeing)
+			if (pField->GetState() == MemeField::State::Memeing)
 			{
 				if (e.GetType() == Mouse::Event::Type::LPress)
 				{
 					const Vei2 mousePos = e.GetPos();
-					if (field.GetRect().Contains(mousePos))
+					if (pField->GetRect().Contains(mousePos))
 					{
-						field.OnRevealClick(mousePos);
+						pField->OnRevealClick(mousePos);
 					}
 				}
 				else if (e.GetType() == Mouse::Event::Type::RPress)
 				{
 					const Vei2 mousePos = e.GetPos();
-					if (field.GetRect().Contains(mousePos))
+					if (pField->GetRect().Contains(mousePos))
 					{
-						field.OnFlagClick(mousePos);
+						pField->OnFlagClick(mousePos);
+					}
+				}
+			}
+			else
+			{
+				if (e.GetType() == Mouse::Event::Type::LPress)
+				{
+					const Vei2 mousePos = e.GetPos();
+					if (gfx.GetRect().Contains(mousePos))
+					{
+						DestroyField();
+						state = State::SelectionMenu;
 					}
 				}
 			}
@@ -71,21 +83,43 @@ void Game::UpdateModel()
 			switch (s)
 			{
 			case SelectionMenu::Size::Small:
-				
-			case SelectionMenu::Size::Medium:
-			case SelectionMenu::Size::Large:
+				CreateField(8, 6);
 				state = State::Memesweeper;
+				break;
+			case SelectionMenu::Size::Medium:
+				CreateField(20, 15);
+				state = State::Memesweeper;
+				break;
+			case SelectionMenu::Size::Large:
+				CreateField(32, 24);
+				state = State::Memesweeper;
+				break;
 			}
 		}
 	}
+}
+
+void Game::CreateField(int width, int height)
+{
+	{
+		assert(pField == nullptr);
+		pField = new MemeField(gfx.GetRect().GetCenter(), width, height);
+	}
+}
+
+void Game::DestroyField()
+{
+	pField->DestroyField();
+	delete pField;
+	pField = nullptr;
 }
 
 void Game::ComposeFrame()
 {
 	if (state == State::Memesweeper)
 	{
-		field.Draw(gfx);
-		if (field.GetState() == MemeField::State::Winrar)
+		pField->Draw(gfx);
+		if (pField->GetState() == MemeField::State::Winrar)
 		{
 			SpriteCodex::DrawWin(gfx.GetRect().GetCenter(), gfx);
 		}
